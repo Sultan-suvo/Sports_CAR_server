@@ -43,9 +43,9 @@ async function run() {
       console.log(req.query.sellerEmail);
       let = query = {}
       if (req.query?.email) {
-        query = { sellerEmail: req.query.email}
+        query = { sellerEmail: req.query.email }
       }
-      const result = await toyCollectoin.find(query).toArray()
+      const result = await toyCollectoin.find(query).sort({ price: 1 }).toArray()
       req.send(result)
     })
 
