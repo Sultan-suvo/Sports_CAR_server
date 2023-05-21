@@ -40,20 +40,79 @@ async function run() {
     })
 
     app.get('/addToys', async (req, res) => {
-      console.log(req.query.sellerEmail);
-      let = query = {}
+      let query = {};
       if (req.query?.email) {
-        query = { sellerEmail: req.query.email }
+        query = { sellerEmail: req.query.email };
       }
-      const result = await toyCollectoin.find(query).sort({ price: 1 }).toArray()
-      req.send(result)
-    })
+      const result = await toyCollectoin.find(query).sort({ price: 1 }).toArray();
+      res.send(result);
+    });
+
+
 
     app.post('/addToys', async (req, res) => {
       const newToys = req.body;
       const result = await toyCollectoin.insertOne(newToys);
       res.send(result)
     })
+
+    // app.patch('/addToys/:id', async (req, res) => {
+    //   const id = req.params.id;
+    //   const updateData = req.body;
+
+    //   try {
+    //     const query = { _id: new ObjectId(id) };
+    //     const updateResult = await toyCollectoin.updateOne(query, { $set: updateData });
+
+    //     if (updateResult.modifiedCount > 0) {
+    //       res.send({ message: 'Toy updated successfully' });
+    //     } else {
+    //       res.status(404).send({ error: 'Toy not found' });
+    //     }
+    //   } catch (error) {
+    //     console.error('Error updating toy:', error);
+    //     res.status(500).send({ error: 'An error occurred while updating the toy' });
+    //   }
+    // });
+
+    // app.put("/addToys/:id", async (req, res) => {
+    //   const id = req.params.id;
+    //   const query = { _id: new ObjectId(id) };
+    //   const options = { upsert: true };
+    //   const updatedToys = req.body;
+    //   const updateToyData = {
+    //     $set: {
+    //       description: updatedToys.description,
+    //       quantity: updatedToys.quantity,
+    //       price: updatedToys.price,
+    //     },
+    //   };
+    //   const result = await addToyCollection.updateOne(
+    //     query,
+    //     updateToyData,
+    //     options
+    //   );
+    //   res.send(result);
+    // });
+
+
+    app.put('/addToys/:id', async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) }
+      const option = { upsert: true }
+      const updateToy = req.body;
+      const updateToyData = {
+        $set: {
+          description: updateToy.description,
+          quantity: updateToy.quantity,
+          price: updateToy.price,
+        }
+      };
+      const result = await toyCollectoin.updateOne(filter,updateToyData,option);
+      req.send(result)
+    })
+
+    
 
     app.delete('/addToys/:id', async (req, res) => {
       const id = req.params.id;
