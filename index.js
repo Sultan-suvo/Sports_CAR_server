@@ -25,6 +25,7 @@ async function run() {
     // await client.connect();
 
     const toyCollectoin = client.db("toysDB").collection("toyDetails");
+    const shopCategoryCollection = client.db("toysDB").collection("shobCategory");
 
     app.get('/addToys', async (req, res) => {
       const cursor = toyCollectoin.find().limit(20);
@@ -82,6 +83,11 @@ async function run() {
       res.send(result)
     })
 
+
+    app.get('/shobCategory', async (req, res) => {
+      const result = await shopCategoryCollection.find().toArray();
+      res.send(result);
+    });
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
